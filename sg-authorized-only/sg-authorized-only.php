@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Soft Group - `Authorized Only!`
- * Plugin URI: https://github.com/Shooter75/WP-plugins/Authorized-Only
+ * Plugin URI: https://github.com/Shooter75/WP-plugins/tree/master/sg-authorized-only
  * Description: This plugin protect your site from not authorized users and add new feature on your site - invites!
  * Version: 2.0
  * Author: Yaroslav Kostecki
