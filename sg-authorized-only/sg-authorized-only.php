@@ -1,12 +1,11 @@
 <?php
 /*
- * Plugin Name: Soft Group - `Authorized Only!`
+ * Plugin Name: Soft Group - Authorized Only
  * Plugin URI: https://github.com/Shooter75/WP-plugins/tree/master/sg-authorized-only
- * Description: This plugin protect your site from not authorized users and add new feature on your site - invites!
- * Version: 2.0
+ * Description: This plugin will be protect your site from not authorized users and add new feature on your site - invites!
+ * Version: 2.1
  * Author: Yaroslav Kostecki
  * Author URI: https://github.com/Shooter75
- * License: Pirat
  * */
 
 class Authorized_Only
@@ -16,13 +15,13 @@ class Authorized_Only
     {
         $actions = new Authorized_Only_Actions();
 
-        if( $this->get_current_setting() == 'Yes')
+        if( $this->get_current_setting() == 'No' )
         {
-            add_action('protection_from_no_authorized', [$actions, 'show_notification']);
+            add_action('wp-head', [$actions, 'do_redirect']);
         }
         else
         {
-            add_action('wp_head', [$actions, 'do_redirect']);
+            add_action('pre_get_posts', [$actions, 'show_notification']);
         }
 
         add_action('admin_menu', [$actions, 'auth_AdminMenu']);
@@ -42,7 +41,7 @@ class Authorized_Only_Actions
 
     public static function do_redirect()
     {
-        if(!self::Check_Authorization())
+        if( !self::Check_Authorization() )
         {
             wp_redirect('wp-login.php');
         }
@@ -56,15 +55,15 @@ class Authorized_Only_Actions
                 <h5>You are not authorized user!</h5>
                 <h6>
                     Please!
-                    <a href="<?php echo home_url('wp-login.php');?>">Log In</a> or
-                    <a href="<?php echo home_url('wp-login.php?action=register');?>">Sing Up</a>
+                    <a href="<?php echo home_url('#');?>">Log In</a> or
+                    <a href="<?php echo home_url('#');?>">Sing Up</a>
                     to get access on this page!
                 </h6>
             </div>
         <?php }
     }
 
-    function auth_options_form()
+    public function auth_options_form()
     {
         if (!current_user_can('manage_options'))
         {
@@ -94,7 +93,7 @@ class Authorized_Only_Actions
         <?php
     }
 
-    function auth_AdminMenu()
+    public function auth_AdminMenu()
     {
         add_options_page('Authorized Only', 'Authorized Only', 'manage_options', 'authorized_only', [$this, 'auth_options_form']);
     }
@@ -137,7 +136,6 @@ class Authorized_Only_Actions
 
 class Custom_Registration
 {
-
     private $username;
     private $email;
     private $password;
@@ -147,7 +145,7 @@ class Custom_Registration
 
     function __construct()
     {
-        add_shortcode('custom_registration_form', array($this, 'shortcode'));
+        add_shortcode( 'custom_registration_form', array($this, 'shortcode') );
     }
 
     function shortcode()
@@ -167,6 +165,7 @@ class Custom_Registration
         }
 
         $this->registration_form();
+
         return ob_get_clean();
     }
 
@@ -269,15 +268,13 @@ class Custom_Registration
         if (is_wp_error($this->validation())) {
             ?>
             <div>
-                <strong>
-                    <?php $this->validation()->get_error_message() ?>
+                <strong class="invalid">
+                    <?=$this->validation()->get_error_message()?>
                 </strong>
-            </div>';
+            </div>
             <?php
-
         } else {
 
-            //Database need this format
             $date = date('Y-m-d G:i:s');
 
             global $wpdb;
@@ -295,6 +292,10 @@ class Custom_Registration
                 'user_status'           => 0,
                 'display_name'          => $this->nickname
             ));
+
+            ?>
+            <a href="wp-login.php">Log In</a>
+            <?php
         }
 
     }
