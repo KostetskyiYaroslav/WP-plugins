@@ -1,7 +1,7 @@
 <?php
 /*
     * Plugin Name: SoftGroup - Podcast
-    * Plugin URI: https://github.com/Shooter75/WP-plugins/tree/master/sg-special-portfolio
+    * Plugin URI: https://github.com/Shooter75/WP-plugins/tree/master/sg-podcast
     * Description: Simple Video/Audio post! Podcast - like a new post type + easy create
     * Version: 1.2
     * Author: https://github.com/Shooter75/
